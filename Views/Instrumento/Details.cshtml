@@ -1,0 +1,47 @@
+﻿@model MusikWebApp.Models.Instrumentos
+
+@{
+    ViewData["Title"] = "Detalle del Instrumento";
+}
+
+<div class="container mt-5">
+    <div class="row
+        <div class="col-md-5 text-center">
+            <img src="@Model.imagen" alt="@Model.nombre"
+                 class="img-fluid rounded shadow-sm"
+                 style="max-height:400px; object-fit:contain;" />
+        </div>
+
+        <div class="col-md-7">
+            <p class="text-muted">ID: @Model.id_instrumentos</p>
+            <h1 class="fw-bold">@Model.nombre</h1>
+            <p class="text-secondary">@Model.descripcion</p>
+
+            <h3 class="text-success fw-bold mt-3">$@Model.precio</h3>
+
+            <p>
+                <span class="badge @(Model.stock > 0 ? "bg-success" : "bg-danger")">
+                    Stock: @Model.stock
+                </span>
+            </p>
+
+            <p class="text-muted">
+                Fecha de ingreso: @Model.fecha_ingreso.ToShortDateString()
+            </p>
+
+            <div class="d-flex gap-3 mt-4">
+                <a asp-action="AgregarCarrito" asp-route-id="@Model.id_instrumentos"
+                   class="btn btn-warning btn-lg">
+                    Agregar al Carrito
+                </a>
+                <a asp-action="Comprar" asp-route-id="@Model.id_instrumentos"
+                   class="btn btn-success btn-lg">
+                    Comprar Ahora
+                </a>
+            </div>
+            <div class="mt-4">
+                <a asp-action="Index" class="btn btn-link">Volver al catálogo</a>
+            </div>
+        </div>
+    </div>
+</div>

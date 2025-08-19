@@ -1,0 +1,11 @@
+.vs/
+*.user
+*.suo
+bin/
+obj/
+*.dbmdl
+*.vscode/
+*.config
+*.log
+*.tmp
+*.cache

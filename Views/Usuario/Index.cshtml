@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Iniciar Sesión";
+}
+<div class="container mt-5">
+    <h2 class="mb-4">Iniciar Sesión</h2>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    <form asp-action="Login" method="post">
+        <div class="mb-3">
+            <label for="correo" class="form-label">Correo electrónico</label>
+            <input type="email" name="correo" class="form-control" required />
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Contraseña</label>
+            <input type="password" name="password" class="form-control" required />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+        <a asp-action="Register" class="btn btn-link">Crear una cuenta</a>
+    </form>
+</div>

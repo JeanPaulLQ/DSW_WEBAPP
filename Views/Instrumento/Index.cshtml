@@ -1,0 +1,42 @@
+﻿@model IEnumerable<MusikWebApp.Models.Instrumentos>
+
+<h1 class="text-center mb-5">🎶 Catálogo de Instrumentos</h1>
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+    @foreach (var item in Model)
+    {
+        <div class="col">
+            <div class="card h-100 shadow-sm border-0 rounded-3">
+                <img src="@item.imagen"
+                     class="card-img-top p-3"
+                     alt="@item.nombre"
+                     style="height:260px; object-fit:contain;">
+
+                <div class="card-body text-center">
+                    <h5 class="card-title fw-bold">@item.nombre</h5>
+                    <p class="card-text text-muted mb-2">
+                        <strong>Stock:</strong> @item.stock
+                    </p>
+                    <h5 class="text-success fw-bold mb-3">$@item.precio</h5>
+                </div>
+
+                <div class="card-footer bg-white border-0">
+                    <div class="d-flex justify-content-between mb-2">
+                        <a asp-action="AgregarCarrito" asp-route-id="@item.id_instrumentos"
+                           class="btn btn-warning btn-sm flex-fill me-1">
+                           Agregar
+                        </a>
+                        <a asp-action="Comprar" asp-route-id="@item.id_instrumentos"
+                           class="btn btn-success btn-sm flex-fill ms-1">
+                           Comprar
+                        </a>
+                    </div>
+                    <a asp-action="Details" asp-route-id="@item.id_instrumentos"
+                       class="btn btn-outline-primary btn-sm w-100">
+                        Ver Detalles
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

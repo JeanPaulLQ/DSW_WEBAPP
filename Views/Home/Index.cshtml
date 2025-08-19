@@ -1,0 +1,32 @@
+﻿@{
+    ViewData["Title"] = "Musik Studio";
+
+    string nombreUsuario = null;
+
+    if (TempData["Success"] != null)
+    {
+        nombreUsuario = TempData["Success"].ToString();
+    }
+    else if (Context.Session.GetString("UsuarioNombre") != null)
+    {
+        nombreUsuario = Context.Session.GetString("UsuarioNombre");
+    }
+}
+
+<div class="container mt-5">
+
+    <div class="p-5 mb-4 bg-light rounded-3 text-center shadow-sm">
+        @if (!string.IsNullOrEmpty(nombreUsuario))
+        {
+            <h1 class="display-4 fw-bold">Bienvenido, @nombreUsuario!</h1>
+            <p class="lead">Qué bueno verte de nuevo en Musik Studio.</p>
+        }
+        else
+        {
+            <h1 class="display-4 fw-bold">Bienvenido a Musik Studio</h1>
+            <p class="lead">Descubre nuestro catálogo de instrumentos musicales.</p>
+        }
+        <a class="btn btn-primary btn-lg mt-3" asp-controller="Instrumento" asp-action="Index">Ver Catálogo</a>
+    </div>
+
+</div>
