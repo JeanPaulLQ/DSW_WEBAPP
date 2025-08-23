@@ -1,0 +1,55 @@
+﻿@model List<MusikWebApp.Models.CarritoItem>
+
+<h2 class="text-center mb-4">🛒 Carrito de Compras</h2>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-info text-center">
+        Tu carrito está vacío.
+    </div>
+}
+else
+{
+    <table class="table table-striped table-bordered align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Producto</th>
+                <th class="text-center">Cantidad</th>
+                <th class="text-end">Precio</th>
+                <th class="text-end">Subtotal</th>
+                <th class="text-center">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.nombre</td>
+                    <td class="text-center">
+                        <div class="d-flex justify-content-center">
+                            <a asp-controller="Carrito" asp-action="QuitarUnProducto" asp-route-id="@item.id_instrumentos"
+                               class="btn btn-sm btn-outline-secondary me-1">-</a>
+                            <span class="align-self-center">@item.cantidad</span>
+                            <a asp-controller="Carrito" asp-action="AgregarCarrito"
+                               asp-route-productoId="@item.id_instrumentos"
+                               asp-route-nombre="@item.nombre"
+                               asp-route-precio="@item.precio"
+                               class="btn btn-sm btn-outline-secondary ms-1">+</a>
+                        </div>
+                    </td>
+                    <td class="text-end">$@item.precio</td>
+                    <td class="text-end">$@item.subtotal</td>
+                    <td class="text-center">
+                        <a asp-controller="Carrito" asp-action="Eliminar" asp-route-id="@item.id_instrumentos"
+                           class="btn btn-sm btn-danger">🗑 Quitar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="text-end">
+        <h4>Total: <span class="text-success fw-bold">$@Model.Sum(x => x.subtotal)</span></h4>
+        <a asp-controller="Carrito" asp-action="Checkout" class="btn btn-primary btn-lg mt-2">💳 Pagar</a>
+    </div>
+}

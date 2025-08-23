@@ -22,7 +22,9 @@
 
                 <div class="card-footer bg-white border-0">
                     <div class="d-flex justify-content-between mb-2">
-                        <a asp-action="AgregarCarrito" asp-route-id="@item.id_instrumentos"
+                        <a asp-controller="Carrito" asp-action="AgregarCarrito" asp-route-productoId="@item.id_instrumentos"
+                           asp-route-nombre="@item.nombre"
+                           asp-route-precio="@item.precio"
                            class="btn btn-warning btn-sm flex-fill me-1">
                            Agregar
                         </a>

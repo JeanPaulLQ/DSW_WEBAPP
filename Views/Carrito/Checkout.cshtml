@@ -1,0 +1,69 @@
+﻿@model List<MusikWebApp.Models.CarritoItem>
+
+@{
+    ViewData["Title"] = "Checkout";
+    decimal total = Model.Sum(x => x.subtotal);
+}
+
+<h2 class="mb-4 text-center">🛒 Resumen de tu Compra</h2>
+
+<div class="row">
+    <div class="col-md-8">
+        <table class="table table-bordered text-center shadow-sm">
+            <thead class="table-light">
+                <tr>
+                    <th>Producto</th>
+                    <th>Precio</th>
+                    <th>Cantidad</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.nombre</td>
+                        <td>$@item.precio</td>
+                        <td>@item.cantidad</td>
+                        <td>$@item.subtotal</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr class="fw-bold">
+                    <td colspan="3" class="text-end">TOTAL:</td>
+                    <td>$@total</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h4 class="mb-3">💳 Método de Pago</h4>
+
+                <form asp-action="ConfirmarCompra" method="post">
+                    <div class="mb-3">
+                        <select name="id_metodoPago" class="form-select" required>
+                            <option value="">-- Selecciona un método --</option>
+                            <option value="1">Tarjeta de Crédito</option>
+                            <option value="2">PayPal</option>
+                            <option value="3">Transferencia Bancaria</option>
+                            <option value="4">Pago Contra Entrega</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100 mb-2">
+                        ✅ Confirmar Compra
+                    </button>
+                </form>
+
+                <a asp-controller="Carrito" asp-action="Index"
+                   class="btn btn-outline-secondary w-100">
+                    🔙 Volver al Carrito
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
