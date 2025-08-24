@@ -26,15 +26,24 @@ namespace MusikWebApp.Controllers
                 newUser = JsonConvert.DeserializeObject<Usuarios>(data);
             }
             return newUser;
+        }
+        private List<Usuarios> listarUsuarios()
+        {
+            var listado = new List<Usuarios>();
+            using (var clienteHttp = new HttpClient())
+            {
+                clienteHttp.BaseAddress = new Uri(_config["Services:URL"]);
+                var mensaje = clienteHttp.GetAsync("Usuarios").Result;
+                var data = mensaje.Content.ReadAsStringAsync().Result;
+                listado = JsonConvert.DeserializeObject<List<Usuarios>>(data);
 
+            }
+            return listado;
         }
         #endregion
         public IActionResult Index()
         {
-            return View();
-        }
-        public IActionResult Create()
-        {
+            //vista del login
             return View();
         }
         [HttpPost]
@@ -61,7 +70,8 @@ namespace MusikWebApp.Controllers
                     user = JsonConvert.DeserializeObject<Usuarios>(data);
 
                     HttpContext.Session.SetString("UsuarioNombre", user.nombre);
-
+                    HttpContext.Session.SetString("UsuarioId", user.id_usuario.ToString());
+                    HttpContext.Session.SetString("UsuarioRol", user.id_rol.ToString());
                     TempData["Success"] = $"Bienvenido {user.nombre}";
                     return RedirectToAction("Index", "Home");
                 }
@@ -73,6 +83,42 @@ namespace MusikWebApp.Controllers
 
             return View("Index");
         }
+        [HttpGet]
+        public IActionResult Perfil()
+        {
+            var idUsuario = HttpContext.Session.GetString("UsuarioId");
 
+            if (string.IsNullOrEmpty(idUsuario))
+                return RedirectToAction("Index", "Usuario");
+
+            Usuarios user = null;
+
+            using (var clienteHttp = new HttpClient())
+            {
+                clienteHttp.BaseAddress = new Uri(_config["Services:URL"]);
+                var respuesta = clienteHttp.GetAsync($"Usuarios/{idUsuario}").Result;
+
+                if (respuesta.IsSuccessStatusCode)
+                {
+                    var data = respuesta.Content.ReadAsStringAsync().Result;
+                    user = JsonConvert.DeserializeObject<Usuarios>(data);
+                }
+            }
+
+            return View(user);
+        }
+        [HttpGet]
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            TempData["Success"] = "Has cerrado sesión correctamente.";
+            return RedirectToAction("Index", "Usuario");
+        }
+        [HttpGet]
+        public IActionResult ListaUsuarios()
+        {
+            var listado = listarUsuarios();
+            return View(listado);
+        }
     }
 }

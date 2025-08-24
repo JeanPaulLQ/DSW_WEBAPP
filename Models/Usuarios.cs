@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MusikWebApp.Models
 {
@@ -16,8 +17,11 @@ namespace MusikWebApp.Models
         public string correo { get; set; }
         public string password { get; set; }
         public string n_documento { get; set; }
-        public Roles roles { get; set; }
-        public TiposDocumentos tipo_documento { get; set; }
-
+        public long id_rol { get; set; }
+        public long id_tipo_documento { get; set; }
+        [NotMapped]
+        public string? nombreRol { get; set; }
+        [NotMapped]
+        public string? nombreTipoDocumento { get; set; }
     }
 }

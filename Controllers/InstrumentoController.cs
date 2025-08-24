@@ -51,5 +51,9 @@ namespace MusikWebApp.Controllers
             Instrumentos inst = getInstrumentoPorId(id);
             return View(inst);
         }
+        public IActionResult ListarInst(int id) {
+            var listado = getInstrumentos();
+            return View(listado);
+        }
     }
 }

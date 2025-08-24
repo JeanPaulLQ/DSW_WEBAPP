@@ -28,15 +28,12 @@
                            class="btn btn-warning btn-sm flex-fill me-1">
                            Agregar
                         </a>
-                        <a asp-action="Comprar" asp-route-id="@item.id_instrumentos"
-                           class="btn btn-success btn-sm flex-fill ms-1">
-                           Comprar
+                        <a asp-action="Details" asp-route-id="@item.id_instrumentos"
+                           class="btn btn-outline-primary btn-sm w-100">
+                            Ver Detalles
                         </a>
                     </div>
-                    <a asp-action="Details" asp-route-id="@item.id_instrumentos"
-                       class="btn btn-outline-primary btn-sm w-100">
-                        Ver Detalles
-                    </a>
+                    
                 </div>
             </div>
         </div>

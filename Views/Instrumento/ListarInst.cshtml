@@ -1,0 +1,79 @@
+﻿@model IEnumerable<MusikWebApp.Models.Instrumentos>
+
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Gestión de Instrumentos";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="fw-bold">🎸 Gestión de Instrumentos</h2>
+        <a asp-action="Create" class="btn btn-primary">
+            ➕ Nuevo Instrumento
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <table class="table table-striped table-hover align-middle text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Imagen</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                        <th>Activo</th>
+                        <th>Fecha Ingreso</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.id_instrumentos</td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(item.imagen))
+                                {
+                                    <img src="@item.imagen" alt="@item.nombre" width="80" height="80" class="rounded shadow-sm" />
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Sin imagen</span>
+                                }
+                            </td>
+                            <td>@item.nombre</td>
+                            <td>@item.descripcion</td>
+                            <td>$ @item.precio.ToString("N2")</td>
+                            <td>@item.stock</td>
+                            <td>
+                                @if (item.activo)
+                                {
+                                    <span class="badge bg-success">Activo</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Inactivo</span>
+                                }
+                            </td>
+                            <td>@item.fecha_ingreso.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.id_instrumentos" class="btn btn-sm btn-warning">
+                                    ✏️ Editar
+                                </a>
+                                <a asp-action="Details" asp-route-id="@item.id_instrumentos" class="btn btn-sm btn-info text-white">
+                                    🔎 Detalles
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.id_instrumentos" class="btn btn-sm btn-danger">
+                                    🗑️ Eliminar
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

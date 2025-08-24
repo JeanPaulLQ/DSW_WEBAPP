@@ -10,6 +10,20 @@ namespace MusikWebApp.Controllers
         {
             _config = config;
         }
+        #region
+        private List<MetodosPagos> listarMetodos()
+        {
+            var listado = new List<MetodosPagos>();
+            using (var clienteHttp = new HttpClient())
+            {
+                clienteHttp.BaseAddress = new Uri(_config["Services:URL"]);
+                var mensaje = clienteHttp.GetAsync("Metodos").Result;
+                var data = mensaje.Content.ReadAsStringAsync().Result;
+                listado = JsonConvert.DeserializeObject<List<MetodosPagos>>(data);
+            }
+            return listado;
+        }
+        #endregion
         public IActionResult Index()
         {
             var carritoJson = HttpContext.Session.GetString("Carrito");
@@ -65,7 +79,6 @@ namespace MusikWebApp.Controllers
         }
         public IActionResult Checkout() {
             var sesionIniciada = HttpContext.Session.GetString("UsuarioNombre");
-            Console.WriteLine(sesionIniciada);
 
             if (string.IsNullOrEmpty(sesionIniciada))
             {
@@ -75,6 +88,8 @@ namespace MusikWebApp.Controllers
             {
                 var carritoJson = HttpContext.Session.GetString("Carrito");
                 var carrito = string.IsNullOrEmpty(carritoJson) ? new List<CarritoItem>() : JsonConvert.DeserializeObject<List<CarritoItem>>(carritoJson);
+                var listMetodos = listarMetodos();
+                ViewBag.MetodosPago = listMetodos;
                 return View(carrito);
             }
             return RedirectToAction("Index");

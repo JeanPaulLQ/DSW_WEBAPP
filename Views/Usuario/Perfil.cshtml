@@ -1,0 +1,71 @@
+﻿@model MusikWebApp.Models.Usuarios
+
+@{
+    ViewData["Title"] = "Perfil";
+}
+
+<div class="container mt-5">
+
+    <!-- Card de información de usuario -->
+    <div class="card shadow-sm border-0 rounded-3 mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">👤 Mi Perfil</h4>
+        </div>
+        <div class="card-body">
+            <p><strong>ID Usuario:</strong> @Model.id_usuario</p>
+            <p><strong>Nombre:</strong> @Model.nombre @Model.apellido</p>
+            <p><strong>Correo:</strong> @Model.correo</p>
+            <p><strong>Teléfono:</strong> @Model.telefono</p>
+            <p><strong>Dirección:</strong> @Model.direccion</p>
+            <p><strong>Documento:</strong> @Model.n_documento</p>
+            <p><strong>Fecha de Registro:</strong> @Model.fecha_registro.ToString("dd/MM/yyyy")</p>
+        </div>
+        <div class="card-footer text-center">
+            <a asp-controller="Usuario" asp-action="Edit" asp-route-id="@Model.id_usuario"
+               class="btn btn-sm btn-outline-primary">✏️ Editar Perfil</a>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-3">
+        <div class="card-header bg-secondary text-white">
+            <h4 class="mb-0">📦 Mis Pedidos</h4>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th># Pedido</th>
+                        <th>Producto</th>
+                        <th>Fecha</th>
+                        <th>Total</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody
+                    <tr>
+                        <td>1001</td>
+                        <td>Guitarra Fender 🎸</td>
+                        <td>15/08/2025</td>
+                        <td>$1200</td>
+                        <td><span class="badge bg-success">Completado</span></td>
+                    </tr>
+                    <tr>
+                        <td>1002</td>
+                        <td>Piano Yamaha 🎹</td>
+                        <td>10/08/2025</td>
+                        <td>$3400</td>
+                        <td><span class="badge bg-warning">En proceso</span></td>
+                    </tr>
+                    <tr>
+                        <td>1003</td>
+                        <td>Batería Pearl 🥁</td>
+                        <td>05/08/2025</td>
+                        <td>$2200</td>
+                        <td><span class="badge bg-danger">Cancelado</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>

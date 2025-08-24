@@ -4,6 +4,11 @@
 <div class="container mt-5">
     <h2 class="mb-4">Iniciar Sesión</h2>
 
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
     @if (TempData["Error"] != null)
     {
         <div class="alert alert-danger">@TempData["Error"]</div>
