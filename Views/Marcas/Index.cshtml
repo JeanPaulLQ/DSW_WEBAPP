@@ -1,0 +1,49 @@
+﻿@model IEnumerable<MusikWebApp.Models.Marcas>
+
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Gestión de Marcas";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="fw-bold">🏷️ Gestión de Marcas</h2>
+        <a asp-action="Create" class="btn btn-primary">
+            ➕ Nueva Marca
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <table class="table table-striped table-hover align-middle text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.id_marca</td>
+                            <td>@item.nombre</td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.id_marca" class="btn btn-sm btn-warning">
+                                    ✏️ Editar
+                                </a>
+                                <form asp-action="Delete" method="post" asp-route-id="@item.id_marca" style="display:inline">
+                                    <button type="submit" class="btn btn-sm btn-danger"
+                                            onclick="return confirm('¿Eliminar esta marca?');">
+                                        🗑️ Eliminar
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
