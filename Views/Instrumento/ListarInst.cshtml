@@ -66,9 +66,10 @@
                                 <a asp-action="Details" asp-route-id="@item.id_instrumentos" class="btn btn-sm btn-info text-white">
                                     🔎 Detalles
                                 </a>
-                                <a asp-action="Delete" asp-route-id="@item.id_instrumentos" class="btn btn-sm btn-danger">
+                                <!-- Botón eliminar con SweetAlert -->
+                                <button class="btn btn-sm btn-danger" onclick="confirmarEliminacion(@item.id_instrumentos, '@Html.Raw(item.nombre)')">
                                     🗑️ Eliminar
-                                </a>
+                                </button>
                             </td>
                         </tr>
                     }
@@ -77,3 +78,147 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script>
+        // Función para confirmar eliminación con SweetAlert
+        function confirmarEliminacion(id, nombre) {
+            Swal.fire({
+                title: '⚠️ ¿Estás seguro?',
+                html: `<div style="font-size: 16px;">
+                         ¿Deseas eliminar el instrumento:<br>
+                         <strong style="color: #dc3545;">${nombre}</strong>?<br><br>
+                         <small style="color: #6c757d;">Esta acción no se puede deshacer</small>
+                       </div>`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: '<i class="fas fa-trash me-2"></i>Sí, eliminar',
+                cancelButtonText: '<i class="fas fa-times me-2"></i>Cancelar',
+                customClass: {
+                    popup: 'swal2-modern',
+                    title: 'swal2-title-warning',
+                    htmlContainer: 'swal2-content-custom',
+                    confirmButton: 'swal2-confirm-delete',
+                    cancelButton: 'swal2-cancel-button'
+                },
+                backdrop: true,
+                allowOutsideClick: false,
+                allowEscapeKey: true,
+                focusConfirm: false,
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Mostrar loading mientras se elimina
+                    Swal.fire({
+                        title: 'Eliminando...',
+                        html: `<div style="font-size: 16px;">
+                                 Eliminando <strong>${nombre}</strong><br>
+                                 <small>Por favor espera un momento</small>
+                               </div>`,
+                        icon: 'info',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    
+                    // Redirigir para eliminar
+                    window.location.href = `@Url.Action("Delete", "Instrumento")/${id}`;
+                }
+            });
+        }
+        
+        // Mostrar SweetAlert de éxito si hay mensaje en TempData
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <text>
+            Swal.fire({
+                icon: 'success',
+                title: 'Operación Exitosa',
+                html: '<div style="font-size: 16px; color: #495057;">@Html.Raw(TempData["SuccessMessage"])</div>',
+                showConfirmButton: true,
+                confirmButtonText: 'Continuar',
+                confirmButtonColor: '#28a745',
+                buttonsStyling: true,
+                customClass: {
+                    popup: 'swal2-modern',
+                    title: 'swal2-title-custom',
+                    htmlContainer: 'swal2-content-custom'
+                },
+                backdrop: true,
+                allowOutsideClick: true,
+                allowEscapeKey: true,
+                timer: 5000,
+                timerProgressBar: true
+            });
+            </text>
+        }
+    </script>
+}
+
+<style>
+    .animate__animated.animate__fadeInDown {
+        animation-duration: 0.5s;
+    }
+    
+    /* Estilos personalizados para SweetAlert */
+    .swal2-modern {
+        border-radius: 15px !important;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
+    }
+    
+    .swal2-title-custom {
+        font-size: 24px !important;
+        font-weight: 600 !important;
+        color: #2c3e50 !important;
+        margin-bottom: 20px !important;
+    }
+    
+    .swal2-title-warning {
+        font-size: 22px !important;
+        font-weight: 600 !important;
+        color: #856404 !important;
+        margin-bottom: 20px !important;
+    }
+    
+    .swal2-content-custom {
+        font-size: 16px !important;
+        line-height: 1.5 !important;
+        color: #495057 !important;
+        margin-bottom: 25px !important;
+    }
+    
+    .swal2-timer-progress-bar {
+        background: #28a745 !important;
+    }
+    
+    .swal2-confirm-delete {
+        font-weight: 600 !important;
+        padding: 10px 24px !important;
+        font-size: 16px !important;
+    }
+    
+    .swal2-cancel-button {
+        font-weight: 600 !important;
+        padding: 10px 24px !important;
+        font-size: 16px !important;
+    }
+    
+    /* Hover effects para botones */
+    .swal2-confirm-delete:hover {
+        background-color: #c82333 !important;
+        transform: translateY(-1px);
+    }
+    
+    .swal2-cancel-button:hover {
+        background-color: #5a6268 !important;
+        transform: translateY(-1px);
+    }
+</style>
