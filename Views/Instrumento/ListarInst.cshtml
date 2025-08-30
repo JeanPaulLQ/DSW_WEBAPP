@@ -6,6 +6,15 @@
 }
 
 <div class="container mt-4">
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-@TempData["TipoMensaje"] fade show text-black" role="alert">
+            @TempData["Mensaje"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2 class="fw-bold">🎸 Gestión de Instrumentos</h2>
         <a asp-action="Create" class="btn btn-primary">
@@ -63,12 +72,14 @@
                                 <a asp-action="Edit" asp-route-id="@item.id_instrumentos" class="btn btn-sm btn-warning">
                                     ✏️ Editar
                                 </a>
-                                <a asp-action="Details" asp-route-id="@item.id_instrumentos" class="btn btn-sm btn-info text-white">
+                                <a asp-action="DetailsPanel" asp-route-id="@item.id_instrumentos" class="btn btn-sm btn-info text-white">
                                     🔎 Detalles
                                 </a>
-                                <a asp-action="Delete" asp-route-id="@item.id_instrumentos" class="btn btn-sm btn-danger">
-                                    🗑️ Eliminar
-                                </a>
+                                <form asp-action="DeleteInst" method="post" class="d-inline"
+                                      onsubmit="return confirm('¿Seguro que deseas eliminar este instrumento?');">
+                                    <input type="hidden" name="id" value="@item.id_instrumentos" />
+                                    <button type="submit" class="btn btn-sm btn-danger">🗑️ Eliminar</button>
+                                </form>
                             </td>
                         </tr>
                     }

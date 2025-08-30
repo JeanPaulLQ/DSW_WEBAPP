@@ -1,0 +1,80 @@
+﻿@model MusikWebApp.Models.Instrumentos
+
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Detalles del Instrumento";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="fw-bold">🔎 Detalles del Instrumento</h2>
+        <a asp-action="ListarInst" class="btn btn-secondary">
+            ⬅️ Volver a la Lista
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white fw-bold">
+            Información del Instrumento
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4 text-center">
+                    @if (!string.IsNullOrEmpty(Model.imagen))
+                    {
+                        <img src="@Model.imagen" alt="@Model.nombre"
+                             class="img-fluid rounded shadow-sm mb-3"
+                             style="max-height:300px;" />
+                    }
+                    else
+                    {
+                        <span class="text-muted">📷 Sin imagen</span>
+                    }
+                </div>
+
+                <div class="col-md-8">
+                    <dl class="row">
+                        <dt class="col-sm-4 fw-bold">ID</dt>
+                        <dd class="col-sm-8">@Model.id_instrumentos</dd>
+
+                        <dt class="col-sm-4 fw-bold">Nombre</dt>
+                        <dd class="col-sm-8">@Model.nombre</dd>
+
+                        <dt class="col-sm-4 fw-bold">Descripción</dt>
+                        <dd class="col-sm-8">@Model.descripcion</dd>
+
+                        <dt class="col-sm-4 fw-bold">Precio</dt>
+                        <dd class="col-sm-8">$ @Model.precio.ToString("N2")</dd>
+
+                        <dt class="col-sm-4 fw-bold">Stock</dt>
+                        <dd class="col-sm-8">@Model.stock</dd>
+
+                        <dt class="col-sm-4 fw-bold">Estado</dt>
+                        <dd class="col-sm-8">
+                            @if (Model.activo)
+                            {
+                                <span class="badge bg-success">Activo</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Inactivo</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-4 fw-bold">Fecha Ingreso</dt>
+                        <dd class="col-sm-8">@Model.fecha_ingreso.ToString("dd/MM/yyyy")</dd>
+
+                        <dt class="col-sm-4 fw-bold">Categoría</dt>
+                        <dd class="col-sm-8">@Model.nombreCategoria</dd>
+
+                        <dt class="col-sm-4 fw-bold">Descripción Categoría</dt>
+                        <dd class="col-sm-8">@Model.descripcionCategoria</dd>
+
+                        <dt class="col-sm-4 fw-bold">Marca</dt>
+                        <dd class="col-sm-8">@Model.nombreMarca</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

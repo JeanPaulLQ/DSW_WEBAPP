@@ -1,0 +1,112 @@
+﻿@model MusikWebApp.Models.Instrumentos
+
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Editar Instrumento";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="fw-bold">✏️ Editar Instrumento</h2>
+        <a asp-action="ListaUsuarios" class="btn btn-secondary">
+            ⬅️ Volver a la Lista
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white fw-bold">
+            Formulario de Edición
+        </div>
+        <div class="card-body">
+            <form asp-action="EditUsuario">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="id_instrumentos" class="form-label"></label>
+                            <input asp-for="id_instrumentos" class="form-control" readonly />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="nombre" class="form-label"></label>
+                            <input asp-for="nombre" class="form-control" />
+                            <span asp-validation-for="nombre" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="descripcion" class="form-label"></label>
+                            <textarea asp-for="descripcion" class="form-control"></textarea>
+                            <span asp-validation-for="descripcion" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="precio" class="form-label"></label>
+                            <input asp-for="precio" class="form-control" />
+                            <span asp-validation-for="precio" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="stock" class="form-label"></label>
+                            <input asp-for="stock" class="form-control" />
+                            <span asp-validation-for="stock" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="imagen" class="form-label"></label>
+                            <input asp-for="imagen" class="form-control" />
+                            @if (!string.IsNullOrEmpty(Model.imagen))
+                            {
+                                <div class="mt-2">
+                                    <img src="@Model.imagen" alt="@Model.nombre" class="img-thumbnail" style="max-height:150px;" />
+                                </div>
+                            }
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="fecha_ingreso" class="form-label"></label>
+                            <input asp-for="fecha_ingreso"
+                                   type="date"
+                                   class="form-control"
+                                   value="@Model.fecha_ingreso.ToString("yyyy-MM-dd")" />
+                            <span asp-validation-for="fecha_ingreso" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="id_categoria" class="form-label"></label>
+                            <select asp-for="id_categoria" class="form-select" asp-items="ViewBag.ListCategorias"></select>
+                            <span asp-validation-for="id_categoria" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="id_marca" class="form-label"></label>
+                            <select asp-for="id_marca" class="form-select" asp-items="ViewBag.ListMarcas"></select>
+                            <span asp-validation-for="id_marca" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="activo" class="form-label d-block"></label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" asp-for="activo" />
+                                <label class="form-check-label">Activo</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end mt-4">
+                    <button type="submit" class="btn btn-primary me-2">💾 Guardar</button>
+                    <a asp-action="ListarInst" class="btn btn-outline-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

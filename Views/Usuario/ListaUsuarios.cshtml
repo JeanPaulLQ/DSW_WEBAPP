@@ -1,17 +1,26 @@
 ﻿@model IEnumerable<MusikWebApp.Models.Usuarios>
 
 @{
-    Layout = "_LayoutAdmin";  // 👈 Aquí aplicamos el layout del admin
+    Layout = "_LayoutAdmin";
     ViewData["Title"] = "Gestión de Usuarios";
 }
 
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2 class="fw-bold">👤 Gestión de Usuarios</h2>
-        <a asp-action="Create" class="btn btn-primary">
+        <a asp-action="CreateUsuario" class="btn btn-primary">
             ➕ Nuevo Usuario
         </a>
     </div>
+
+    <!-- ✅ Bloque para mostrar mensajes de éxito o error -->
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-@TempData["TipoMensaje"] alert-dismissible fade show" role="alert">
+            @TempData["Mensaje"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
 
     <div class="card shadow-sm">
         <div class="card-body">
@@ -46,12 +55,14 @@
                             <td>@item.nombreRol</td>
                             <td>@item.nombreTipoDocumento</td>
                             <td>
-                                <a asp-action="Edit" asp-route-id="@item.id_usuario" class="btn btn-sm btn-warning">
-                                    ✏️ Editar
+                                <a asp-action="EditUsuario" asp-route-id="@item.id_usuario" class="btn btn-sm btn-warning">
+                                    Editar
                                 </a>
-                                <a asp-action="Details" asp-route-id="@item.id_usuario" class="btn btn-sm btn-info text-white">
-                                    🔎 Detalles
-                                </a>
+                                <form asp-action="DeleteUsuario" asp-route-id="@item.id_usuario" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-sm btn-danger text-white">
+                                        Eliminar
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     }

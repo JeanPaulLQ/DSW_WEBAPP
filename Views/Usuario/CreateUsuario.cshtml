@@ -1,0 +1,99 @@
+﻿@model MusikWebApp.Models.Usuarios
+
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Registrar Usuario";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="fw-bold">👤 Registrar Nuevo Usuario</h2>
+        <a asp-action="ListaUsuarios" class="btn btn-secondary">
+            🔙 Volver a la Lista
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form asp-action="CreateUsuario" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="nombre" class="form-label fw-bold"></label>
+                        <input asp-for="nombre" class="form-control" />
+                        <span asp-validation-for="nombre" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="apellido" class="form-label fw-bold"></label>
+                        <input asp-for="apellido" class="form-control" />
+                        <span asp-validation-for="apellido" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="telefono" class="form-label fw-bold"></label>
+                        <input asp-for="telefono" class="form-control" />
+                        <span asp-validation-for="telefono" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="correo" class="form-label fw-bold"></label>
+                        <input asp-for="correo" type="email" class="form-control" />
+                        <span asp-validation-for="correo" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="password" class="form-label fw-bold"></label>
+                        <input asp-for="password" type="password" class="form-control" />
+                        <span asp-validation-for="password" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="n_documento" class="form-label fw-bold"></label>
+                        <input asp-for="n_documento" class="form-control" />
+                        <span asp-validation-for="n_documento" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="id_rol" class="form-label"></label>
+                        <select asp-for="id_rol" class="form-select" asp-items="ViewBag.Roles"></select>
+                        <span asp-validation-for="id_rol" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="id_tipo_documento" class="form-label"></label>
+                        <select asp-for="id_tipo_documento" class="form-select" asp-items="ViewBag.Documentos"></select>
+                        <span asp-validation-for="id_tipo_documento" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="direccion" class="form-label fw-bold"></label>
+                        <input asp-for="direccion" class="form-control" />
+                        <span asp-validation-for="direccion" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="fecha_registro" class="form-label fw-bold"></label>
+                        <input asp-for="fecha_registro" type="date"
+                               value="@DateTime.Now.ToString("yyyy-MM-dd")"
+                               class="form-control" />
+                        <span asp-validation-for="fecha_registro" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mt-4 d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary px-4">
+                        💾 Registrar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

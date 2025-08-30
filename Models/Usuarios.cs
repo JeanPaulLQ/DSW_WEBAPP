@@ -15,9 +15,13 @@ namespace MusikWebApp.Models
         public DateTime fecha_registro { get; set; }
         public string direccion { get; set; }
         public string correo { get; set; }
+        [Display(Name = "Contraseña")]
         public string password { get; set; }
+        [Display(Name = "Numero de Documento")]
         public string n_documento { get; set; }
+        [Display(Name = "Rol")]
         public long id_rol { get; set; }
+        [Display(Name = "Tipo Documento")]
         public long id_tipo_documento { get; set; }
         [NotMapped]
         public string? nombreRol { get; set; }

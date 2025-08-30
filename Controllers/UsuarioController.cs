@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using MusikWebApp.Models;
 using Newtonsoft.Json;
 using System.Text;
@@ -13,19 +14,83 @@ namespace MusikWebApp.Controllers
             _config = config;
         }
         #region
-        private Usuarios registerUsuario(Usuarios user)
+        private bool deleteUsuarios(long id)
         {
-            Usuarios newUser = null;
             using (var clienteHttp = new HttpClient())
             {
                 clienteHttp.BaseAddress = new Uri(_config["Services:URL"]);
-                StringContent contenido = new StringContent(JsonConvert.SerializeObject(user),
-                    System.Text.Encoding.UTF8, "application/json");
-                var mensaje = clienteHttp.PostAsync("Usuario", contenido).Result;
-                var data = mensaje.Content.ReadAsStringAsync().Result;
-                newUser = JsonConvert.DeserializeObject<Usuarios>(data);
+                var mensaje = clienteHttp.DeleteAsync($"Usuarios/{id}").Result;
+                return mensaje.IsSuccessStatusCode;
             }
-            return newUser;
+        }
+        private List<Roles> getRoles()
+        {
+            var listado = new List<Roles>();
+            using (var clienteHttp = new HttpClient())
+            {
+                clienteHttp.BaseAddress = new Uri(_config["Services:URL"]);
+                var mensaje = clienteHttp.GetAsync("Rol").Result;
+                var data = mensaje.Content.ReadAsStringAsync().Result;
+                listado = JsonConvert.DeserializeObject<List<Roles>>(data);
+            }
+            return listado;
+        }
+        private Usuarios getUsuarioPorId(long id)
+        {
+            Usuarios user = null;
+            using (var clienteHttp = new HttpClient())
+            {
+                clienteHttp.BaseAddress = new Uri(_config["Services:URL"]);
+                var respuesta = clienteHttp.GetAsync($"Usuarios/{id}").Result;
+
+                if (respuesta.IsSuccessStatusCode)
+                {
+                    var data = respuesta.Content.ReadAsStringAsync().Result;
+                    user = JsonConvert.DeserializeObject<Usuarios>(data);
+                }
+            }
+            return user;
+        }
+
+        private bool updateUsuario(Usuarios usu)
+        {
+            using (var clienteHttp = new HttpClient())
+            {
+                clienteHttp.BaseAddress = new Uri(_config["Services:URL"]);
+                var contenido = new StringContent(
+                    JsonConvert.SerializeObject(usu),
+                    Encoding.UTF8,
+                    "application/json"
+                );
+
+                var respuesta = clienteHttp.PutAsync("Usuarios/update", contenido).Result;
+                return respuesta.IsSuccessStatusCode;
+            }
+        }
+
+        private List<TiposDocumentos> getDocumentos()
+        {
+            var listado = new List<TiposDocumentos>();
+            using (var clienteHttp = new HttpClient())
+            {
+                clienteHttp.BaseAddress = new Uri(_config["Services:URL"]);
+                var mensaje = clienteHttp.GetAsync("TipoDoc").Result;
+                Console.WriteLine(mensaje);
+                var data = mensaje.Content.ReadAsStringAsync().Result;
+                Console.WriteLine(data);
+                listado = JsonConvert.DeserializeObject<List<TiposDocumentos>>(data);
+            }
+            return listado;
+        }
+        private bool registerUsuario(Usuarios user)
+        {
+            using (var clienteHttp = new HttpClient())
+            {
+                clienteHttp.BaseAddress = new Uri(_config["Services:URL"]);
+                var contenido = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
+                var mensaje = clienteHttp.PostAsync("Usuarios/register", contenido).Result;
+                return mensaje.IsSuccessStatusCode;
+            }
         }
         private List<Usuarios> listarUsuarios()
         {
@@ -43,7 +108,6 @@ namespace MusikWebApp.Controllers
         #endregion
         public IActionResult Index()
         {
-            //vista del login
             return View();
         }
         [HttpPost]
@@ -119,6 +183,55 @@ namespace MusikWebApp.Controllers
         {
             var listado = listarUsuarios();
             return View(listado);
+        }
+        public IActionResult CreateUsuario()
+        {
+            var listaRoles = getRoles();
+            var listaDoc = getDocumentos();
+            ViewBag.Roles = new SelectList(listaRoles, "id_rol", "nombre");
+            ViewBag.Documentos = new SelectList(listaDoc, "id_tipoDocumento", "nombre_tipo");
+            return View(new Usuarios());
+        }
+        [HttpPost]
+        public IActionResult CreateUsuario(Usuarios user)
+        {
+            registerUsuario(user);
+            return RedirectToAction("ListaUsuarios");
+        }
+        [HttpPost]
+        public IActionResult DeleteUsuario(long id)
+        {
+            bool result = deleteUsuarios(id);
+            if (result)
+            {
+                TempData["Mensaje"] = "Usuario eliminado correctamente.";
+                TempData["TipoMensaje"] = "success";
+            }
+            else
+            {
+                TempData["Mensaje"] = "No se pudo eliminar al usuario.";
+                TempData["TipoMensaje"] = "danger";
+            }
+            return RedirectToAction("ListaUsuarios");
+        }
+
+        public IActionResult EditUsuario(long id)
+        {
+            var inst = getUsuarioPorId(id);
+            var listaRoles = getRoles();
+            var listaDoc = getDocumentos();
+            ViewBag.Roles = new SelectList(listaRoles, "id_rol", "nombre");
+            ViewBag.Documentos = new SelectList(listaDoc, "id_tipoDocumento", "nombre_tipo");
+            
+            if (inst == null) return NotFound();
+            return View(inst);
+        }
+
+        [HttpPost]
+        public IActionResult EditUsuario(Usuarios usu)
+        {
+            updateUsuario(usu);
+            return RedirectToAction("ListaUsuarios");
         }
     }
 }

@@ -1,0 +1,91 @@
+﻿@model MusikWebApp.Models.Usuarios
+
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Editar Usuario";
+}
+
+<div class="container mt-4">
+    <h2 class="fw-bold">✏️ Editar Usuario</h2>
+    <hr />
+
+    <form asp-action="Edit" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <input type="hidden" asp-for="id_usuario" />
+
+        <div class="mb-3">
+            <label asp-for="nombre" class="form-label"></label>
+            <input asp-for="nombre" class="form-control" />
+            <span asp-validation-for="nombre" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="apellido" class="form-label"></label>
+            <input asp-for="apellido" class="form-control" />
+            <span asp-validation-for="apellido" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="telefono" class="form-label"></label>
+            <input asp-for="telefono" class="form-control" />
+            <span asp-validation-for="telefono" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="fecha_registro" class="form-label"></label>
+            <input asp-for="fecha_registro"
+                   type="date"
+                   class="form-control"
+                   value="@Model.fecha_registro.ToString("yyyy-MM-dd")" />
+            <span asp-validation-for="fecha_registro" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="direccion" class="form-label"></label>
+            <input asp-for="direccion" class="form-control" />
+            <span asp-validation-for="direccion" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="correo" class="form-label"></label>
+            <input asp-for="correo" class="form-control" />
+            <span asp-validation-for="correo" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="password" class="form-label"></label>
+            <input asp-for="password" class="form-control" type="password" />
+            <span asp-validation-for="password" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="n_documento" class="form-label"></label>
+            <input asp-for="n_documento" class="form-control" />
+            <span asp-validation-for="n_documento" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="id_rol" class="form-label">Rol</label>
+            <select asp-for="id_rol" class="form-select" asp-items="ViewBag.Roles"></select>
+            <span asp-validation-for="id_rol" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="id_tipo_documento" class="form-label">Tipo Documento</label>
+            <select asp-for="id_tipo_documento" class="form-select" asp-items="ViewBag.Documentos"></select>
+            <span asp-validation-for="id_tipo_documento" class="text-danger"></span>
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-success">💾 Guardar cambios</button>
+            <a asp-action="ListaUsuarios" class="btn btn-secondary">⬅️ Volver</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
