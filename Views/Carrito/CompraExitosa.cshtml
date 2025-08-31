@@ -1,0 +1,49 @@
+﻿@{
+    ViewData["Title"] = "Compra Exitosa";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="card shadow-lg border-success">
+                <div class="card-body p-5">
+                    <div class="text-success mb-4">
+                        <i class="fas fa-check-circle" style="font-size: 4rem;"></i>
+                    </div>
+                    
+                    <h1 class="text-success mb-3">¡Compra Exitosa!</h1>
+                    
+                    <h4 class="mb-4">🎉 ¡Gracias por tu compra!</h4>
+                    
+                    <p class="lead text-muted mb-4">
+                        Tu pedido ha sido procesado exitosamente. 
+                        Recibirás un correo de confirmación en breve.
+                    </p>
+                    
+                    <div class="alert alert-info" role="alert">
+                        <strong>📧 Próximos pasos:</strong><br>
+                        • Te enviaremos los detalles de tu compra por correo<br>
+                        • Procesaremos tu pedido en las próximas 24 horas<br>
+                        • Te notificaremos cuando esté listo para envío
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
+                        <a asp-controller="Home" asp-action="Index" 
+                           class="btn btn-primary btn-lg me-md-2">
+                            🏠 Volver al Inicio
+                        </a>
+                        <a asp-controller="Instrumento" asp-action="Index" 
+                           class="btn btn-outline-secondary btn-lg">
+                            🎸 Seguir Comprando
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+}

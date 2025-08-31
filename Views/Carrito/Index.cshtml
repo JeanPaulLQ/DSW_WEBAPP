@@ -37,8 +37,11 @@ else
                                class="btn btn-sm btn-outline-secondary ms-1">+</a>
                         </div>
                     </td>
-                    <td class="text-end">$@item.precio</td>
-                    <td class="text-end">$@item.subtotal</td>
+                    <td class="text-end">$@((item.precio / 100).ToString("N2"))</td>
+                    <td class="text-end">$@((item.subtotal / 100).ToString("N2"))</td>
+                    @* <td class="text-end">@item.precio</td> *@
+                   @*  <td class="text-end">@item.subtotal</td> *@
+
                     <td class="text-center">
                         <a asp-controller="Carrito" asp-action="Eliminar" asp-route-id="@item.id_instrumentos"
                            class="btn btn-sm btn-danger">🗑 Quitar</a>
@@ -49,7 +52,8 @@ else
     </table>
 
     <div class="text-end">
-        <h4>Total: <span class="text-success fw-bold">$@Model.Sum(x => x.subtotal)</span></h4>
+        @* <h4>Total: <span class="text-success fw-bold">@Model.Sum(x => x.subtotal).ToString("C")</span></h4> *@
+        <h4>Total: <span class="text-success fw-bold">$@((Model.Sum(x => x.subtotal) / 100).ToString("N2"))</span></h4>
         <a asp-controller="Carrito" asp-action="Checkout" class="btn btn-primary btn-lg mt-2">💳 Pagar</a>
     </div>
 }

@@ -94,5 +94,98 @@ namespace MusikWebApp.Controllers
             }
             return RedirectToAction("Index");
         }
+        [HttpPost]
+        public async Task<IActionResult> ConfirmarCompra(long id_metodoPago)
+        {
+            var sesionIniciada = HttpContext.Session.GetString("UsuarioNombre");
+            var usuarioIdString = HttpContext.Session.GetString("UsuarioId");
+
+            if (string.IsNullOrEmpty(sesionIniciada) || string.IsNullOrEmpty(usuarioIdString))
+            {
+                TempData["Error"] = "Debes iniciar sesión para confirmar la compra.";
+                return RedirectToAction("Index", "Usuario");
+            }
+
+            if (!long.TryParse(usuarioIdString, out long usuarioId))
+            {
+                TempData["Error"] = "Error en la sesión del usuario.";
+                return RedirectToAction("Index", "Usuario");
+            }
+
+            // Obtener carrito de la sesión
+            var carritoJson = HttpContext.Session.GetString("Carrito");
+            var carrito = string.IsNullOrEmpty(carritoJson) ? new List<CarritoItem>() : JsonConvert.DeserializeObject<List<CarritoItem>>(carritoJson);
+
+            if (!carrito.Any())
+            {
+                TempData["Error"] = "Tu carrito está vacío.";
+                return RedirectToAction("Index");
+            }
+
+            try
+            {
+                // Calcular total
+                decimal total = carrito.Sum(x => x.subtotal) / 100;
+
+                // Preparar datos para el stored procedure
+                var carritoParaDB = carrito.Select(item => new
+                {
+                    id_instrumento = item.id_instrumentos,
+                    cantidad = item.cantidad,
+                    sub_total = (double)(item.subtotal / 100) // Convertir a double para que coincida con la BD
+                }).ToList();
+
+                var carritoJsonParaDB = JsonConvert.SerializeObject(carritoParaDB);
+
+                // Preparar request para API
+                var confirmarCompraRequest = new
+                {
+                    IdUsuario = usuarioId,
+                    IdMetodoPago = id_metodoPago,
+                    PrecioTotal = total,
+                    CarritoJson = carritoJsonParaDB
+                };
+
+                // Llamar a la API para confirmar la compra
+                using (var clienteHttp = new HttpClient())
+                {
+                    clienteHttp.BaseAddress = new Uri(_config["Services:URL"]);
+                    var contenido = new StringContent(
+                        JsonConvert.SerializeObject(confirmarCompraRequest),
+                        System.Text.Encoding.UTF8,
+                        "application/json"
+                    );
+
+                    var respuesta = await clienteHttp.PostAsync("Ventas/confirmar", contenido);
+
+                    if (respuesta.IsSuccessStatusCode)
+                    {
+                        // Limpiar carrito
+                        HttpContext.Session.Remove("Carrito");
+                        
+                        TempData["Success"] = "¡Compra confirmada exitosamente! Gracias por tu compra.";
+                        return RedirectToAction("CompraExitosa");
+                    }
+                    else
+                    {
+                        var errorContent = await respuesta.Content.ReadAsStringAsync();
+                        var errorData = JsonConvert.DeserializeObject<dynamic>(errorContent);
+                        
+                        TempData["Error"] = $"Error al confirmar la compra: {errorData?.message ?? "Error desconocido"}";
+                        return RedirectToAction("Checkout");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Error al procesar la compra: {ex.Message}";
+                return RedirectToAction("Checkout");
+            }
+        }
+
+        public IActionResult CompraExitosa()
+        {
+            return View();
+        }
     }
 }

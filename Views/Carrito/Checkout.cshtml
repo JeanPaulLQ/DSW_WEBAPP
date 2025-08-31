@@ -2,68 +2,193 @@
 
 @{
     ViewData["Title"] = "Checkout";
-    decimal total = Model.Sum(x => x.subtotal);
+    // decimal total = Model.Sum(x => x.subtotal);
+    decimal total = Model.Sum(x => x.subtotal) / 100;
 }
 
-<h2 class="mb-4 text-center">🛒 Resumen de tu Compra</h2>
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">🛒 Resumen de tu Compra</h2>
 
-<div class="row">
-    <div class="col-md-8">
-        <table class="table table-bordered text-center shadow-sm">
-            <thead class="table-light">
-                <tr>
-                    <th>Producto</th>
-                    <th>Precio</th>
-                    <th>Cantidad</th>
-                    <th>Subtotal</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>@item.nombre</td>
-                        <td>$@item.precio</td>
-                        <td>@item.cantidad</td>
-                        <td>$@item.subtotal</td>
-                    </tr>
-                }
-            </tbody>
-            <tfoot>
-                <tr class="fw-bold">
-                    <td colspan="3" class="text-end">TOTAL:</td>
-                    <td>$@total</td>
-                </tr>
-            </tfoot>
-        </table>
-    </div>
-
-    <div class="col-md-4">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <h4 class="mb-3">💳 Método de Pago</h4>
-
-                <form asp-action="ConfirmarCompra" method="post">
-                    <div class="mb-3">
-                        <select name="id_metodoPago" class="form-select" required>
-                            <option value="">-- Selecciona un método --</option>
-                            @foreach (var metodo in ViewBag.MetodosPago)
-                            {
-                                <option value="@metodo.id_metodoPago">@metodo.nombre</option>
-                            }
-                        </select>
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning text-center" role="alert">
+            <h4>Tu carrito está vacío</h4>
+            <p>Agrega algunos productos antes de proceder al checkout.</p>
+            <a asp-controller="Instrumento" asp-action="Index" class="btn btn-primary">
+                ?? Ver Instrumentos
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">📦 Productos en tu carrito</h5>
                     </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Producto</th>
+                                        <th class="text-center">Precio</th>
+                                        <th class="text-center">Cantidad</th>
+                                        <th class="text-center">Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div>
+                                                        <h6 class="mb-0">@item.nombre</h6>
+                                                        <small class="text-muted">ID: @item.id_instrumentos</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center align-middle">
+                                                <span class="fw-bold">$@((item.precio / 100).ToString("N2"))</span>
+                                            </td>
+                                            <td class="text-center align-middle">
+                                                <span class="badge bg-primary rounded-pill">@item.cantidad</span>
+                                            </td>
+                                            <td class="text-center align-middle">
+                                                <span class="fw-bold text-success">$@((item.subtotal / 100).ToString("N2"))</span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr class="table-dark">
+                                        <td colspan="3" class="text-end fw-bold fs-5">TOTAL:</td>
+                                        <td class="text-center fw-bold fs-5 text-warning">$@total.ToString("N2")</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                    <button type="submit" class="btn btn-success w-100 mb-2">
-                        ✅ Confirmar Compra
-                    </button>
-                </form>
+            <div class="col-lg-4">
+                <div class="card shadow-sm sticky-top" style="top: 20px;">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">💳 Finalizar Compra</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <h6>Resumen del pedido:</h6>
+                            <div class="d-flex justify-content-between">
+                                <span>Productos (@Model.Sum(x => x.cantidad)):</span>
+                                <span>$@total.ToString("N2")</span>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between fw-bold fs-5">
+                                <span>Total:</span>
+                                <span class="text-success">$@total.ToString("N2")</span>
+                            </div>
+                        </div>
 
-                <a asp-controller="Carrito" asp-action="Index"
-                   class="btn btn-outline-secondary w-100">
-                    🔙 Volver al Carrito
-                </a>
+                        <form asp-action="ConfirmarCompra" method="post" id="checkoutForm">
+                            <div class="mb-3">
+                                <label for="id_metodoPago" class="form-label fw-bold">Método de Pago:</label>
+                                <select name="id_metodoPago" id="id_metodoPago" class="form-select" required>
+                                    <option value="">-- Selecciona un método --</option>
+                                    @foreach (var metodo in ViewBag.MetodosPago)
+                                    {
+                                        <option value="@metodo.id_metodoPago">@metodo.nombre</option>
+                                    }
+                                </select>
+                                <div class="invalid-feedback">
+                                    Por favor selecciona un método de pago.
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-success w-100 mb-3 btn-lg" id="btnConfirmar">
+                                <i class="fas fa-lock me-2"></i>Confirmar Compra
+                            </button>
+                        </form>
+
+                        <a asp-controller="Carrito" asp-action="Index"
+                           class="btn btn-outline-secondary w-100">
+                            <i class="fas fa-arrow-left me-2"></i>Volver al Carrito
+                        </a>
+
+                        <div class="text-center mt-3">
+                            <small class="text-muted">
+                                <i class="fas fa-shield-alt me-1"></i>
+                                Compra 100% segura
+                            </small>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    }
 </div>
+
+@section Scripts {
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        // Validación del formulario
+        document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+            const metodoPago = document.getElementById('id_metodoPago').value;
+
+            if (!metodoPago) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Método de pago requerido',
+                    text: 'Por favor selecciona un método de pago para continuar.',
+                    confirmButtonText: 'Entendido'
+                });
+                return;
+            }
+
+            // Mostrar confirmación
+            e.preventDefault();
+            Swal.fire({
+                title: '¿Confirmar compra?',
+                html: `
+                    <div class="text-start">
+                        <p><strong>Total a pagar:</strong> $@total.ToString("N2")</p>
+                        <p><strong>Productos:</strong> @Model.Sum(x => x.cantidad) items</p>
+                        <p><small class="text-muted">Esta acción no se puede deshacer</small></p>
+                    </div>
+                `,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: '<i class="fas fa-check me-2"></i>Sí, confirmar',
+                cancelButtonText: '<i class="fas fa-times me-2"></i>Cancelar',
+                allowOutsideClick: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Mostrar loading
+                    Swal.fire({
+                        title: 'Procesando compra...',
+                        html: 'Por favor espera mientras procesamos tu pedido',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    // Enviar formulario
+                    this.submit();
+                }
+            });
+        });
+    </script>
+}
